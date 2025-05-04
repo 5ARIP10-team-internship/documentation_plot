@@ -1,0 +1,23 @@
+Using cuda device
+Wrapping the env with a `Monitor` wrapper
+Wrapping the env in a DummyVecEnv.
+Testing: PMSM / Delta Vdq penalty / Reward absolute
+Model: ddpg_EnvPMSM_absolute
+Begining Learning
+Logging to ./logs/SAC_1
+Traceback (most recent call last):
+  File "E:\TU Eindhoven\Team internship\Code\Documentation\MF_model.py", line 160, in <module>
+    model.learn(total_timesteps=config["total_timesteps"], log_interval=10, progress_bar=True,
+  File "E:\Anaconda3\envs\RLenv\lib\site-packages\stable_baselines3\sac\sac.py", line 307, in learn
+    return super().learn(
+  File "E:\Anaconda3\envs\RLenv\lib\site-packages\stable_baselines3\common\off_policy_algorithm.py", line 314, in learn
+    total_timesteps, callback = self._setup_learn(
+  File "E:\Anaconda3\envs\RLenv\lib\site-packages\stable_baselines3\common\off_policy_algorithm.py", line 297, in _setup_learn
+    return super()._setup_learn(
+  File "E:\Anaconda3\envs\RLenv\lib\site-packages\stable_baselines3\common\base_class.py", line 435, in _setup_learn
+    callback = self._init_callback(callback, progress_bar)
+  File "E:\Anaconda3\envs\RLenv\lib\site-packages\stable_baselines3\common\base_class.py", line 379, in _init_callback
+    callback = CallbackList([callback, ProgressBarCallback()])
+  File "E:\Anaconda3\envs\RLenv\lib\site-packages\stable_baselines3\common\callbacks.py", line 694, in __init__
+    raise ImportError(
+ImportError: You must install tqdm and rich in order to use the progress bar callback. It is included if you install stable-baselines with the extra packages: `pip install stable-baselines3[extra]`

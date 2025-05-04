@@ -1,0 +1,17 @@
+{"time":"2025-05-03T14:56:50.1819854+02:00","level":"INFO","msg":"stream: starting","core version":"0.19.8","symlink path":"E:\\TU Eindhoven\\Team internship\\Code\\Documentation\\wandb\\run-20250503_145650-1o7ihk7e\\logs\\debug-core.log"}
+{"time":"2025-05-03T14:56:50.33589+02:00","level":"INFO","msg":"created new stream","id":"1o7ihk7e"}
+{"time":"2025-05-03T14:56:50.3366166+02:00","level":"INFO","msg":"stream: started","id":"1o7ihk7e"}
+{"time":"2025-05-03T14:56:50.3366166+02:00","level":"INFO","msg":"writer: Do: started","stream_id":"1o7ihk7e"}
+{"time":"2025-05-03T14:56:50.3366166+02:00","level":"INFO","msg":"sender: started","stream_id":"1o7ihk7e"}
+{"time":"2025-05-03T14:56:50.3366166+02:00","level":"INFO","msg":"handler: started","stream_id":"1o7ihk7e"}
+{"time":"2025-05-03T14:56:50.6931613+02:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-05-03T14:57:00.8835788+02:00","level":"INFO","msg":"stream: closing","id":"1o7ihk7e"}
+{"time":"2025-05-03T14:57:00.8835788+02:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-05-03T14:57:00.8854611+02:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-05-03T14:57:10.3076971+02:00","level":"INFO","msg":"tensorboard: no root directory after 10 seconds, using working directory"}
+{"time":"2025-05-03T14:57:10.3096983+02:00","level":"ERROR","msg":"tensorboard: error creating symlink","target":"E:\\TU Eindhoven\\Team internship\\Code\\Documentation\\logs\\SAC_1\\events.out.tfevents.1746277020.DESKTOP-0AD0KLQ.22016.0","symlink":"E:\\TU Eindhoven\\Team internship\\Code\\Documentation\\wandb\\run-20250503_145650-1o7ihk7e\\files\\logs\\SAC_1\\events.out.tfevents.1746277020.DESKTOP-0AD0KLQ.22016.0","error":"symlink E:\\TU Eindhoven\\Team internship\\Code\\Documentation\\logs\\SAC_1\\events.out.tfevents.1746277020.DESKTOP-0AD0KLQ.22016.0 E:\\TU Eindhoven\\Team internship\\Code\\Documentation\\wandb\\run-20250503_145650-1o7ihk7e\\files\\logs\\SAC_1\\events.out.tfevents.1746277020.DESKTOP-0AD0KLQ.22016.0: A required privilege is not held by the client."}
+{"time":"2025-05-03T14:57:10.9139813+02:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-05-03T14:57:11.0987189+02:00","level":"INFO","msg":"handler: closed","stream_id":"1o7ihk7e"}
+{"time":"2025-05-03T14:57:11.0987189+02:00","level":"INFO","msg":"sender: closed","stream_id":"1o7ihk7e"}
+{"time":"2025-05-03T14:57:11.0987189+02:00","level":"INFO","msg":"writer: Close: closed","stream_id":"1o7ihk7e"}
+{"time":"2025-05-03T14:57:11.0987189+02:00","level":"INFO","msg":"stream: closed","id":"1o7ihk7e"}

@@ -1,0 +1,6 @@
+Using cuda device
+Wrapping the env with a `Monitor` wrapper
+Wrapping the env in a DummyVecEnv.
+Testing: PMSM / Delta Vdq penalty / Reward absolute
+Model: ddpg_EnvPMSM_absolute
+Begining Learning
