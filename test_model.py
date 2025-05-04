@@ -10,16 +10,20 @@ import random
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 
-random.seed(42)
+
 def test_and_save_csv(model_type, model_path, reward_function, num_episodes, test_id):
     model, env, sys_params_dict, use_stable_baselines = load_trained_model(
         model_type, reward_function, model_path
     )
 
     data_records = []
+    env.reset(seed=42) # Set a random seed for reproducibility
 
     for episode in range(num_episodes):
-        obs, _ = env.reset(options={"Idref": 0, "Iqref": 100})
+
+
+        obs, _ = env.reset() # Random test
+        #obs, _ = env.reset(options={"Idref": 100, "Iqref": 0}) # with fixed references
         step = 0
         done = False
         while not done:
@@ -66,7 +70,7 @@ def test_and_save_csv(model_type, model_path, reward_function, num_episodes, tes
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_type", type=str, required=True, choices=["MBMF", "SAC"], help="Type of model to test")
+    parser.add_argument("--model_type", type=str, required=True, choices=["MBAC", "SAC"], help="Type of model to test")
     parser.add_argument("--model_path", type=str, required=True, help="Path to the trained model file")
     parser.add_argument("--reward_function", type=str, default="absolute", help="Reward function used")
     parser.add_argument("--episodes", type=int, default=100, help="Number of test episodes to run")
