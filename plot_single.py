@@ -85,6 +85,21 @@ from utils import PlotTest
 #
 #     print(f" Saved {len(episodes)} per-episode box plots to {save_dir}/")
 
+import os
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+def remove_outliers(data):
+    data = np.array(data)
+    q1 = np.percentile(data, 25)
+    q3 = np.percentile(data, 75)
+    iqr = q3 - q1
+    lower_bound = q1 - 1.5 * iqr
+    upper_bound = q3 + 1.5 * iqr
+    filtered = data[(data >= lower_bound) & (data <= upper_bound)]
+    return filtered
+
 def plot_box_single(csv_file, save_dir="plots", csv_base="", last_n_steps=100):
     if not os.path.exists(csv_file):
         print(f"File not found: {csv_file}")
@@ -106,30 +121,35 @@ def plot_box_single(csv_file, save_dir="plots", csv_base="", last_n_steps=100):
         last_id_errors.extend(last_group['Id_error'].values)
         last_iq_errors.extend(last_group['Iq_error'].values)
 
+    # Remove outliers
+    filtered_id_errors = remove_outliers(last_id_errors)
+    filtered_iq_errors = remove_outliers(last_iq_errors)
+
     fig, axs = plt.subplots(1, 2, figsize=(12, 6))
 
     # Id error boxplot
-    axs[0].boxplot(last_id_errors, patch_artist=True, showmeans=True, showfliers=False,
+    axs[0].boxplot(filtered_id_errors, patch_artist=True, showmeans=True, showfliers=True,
                    meanprops=dict(marker='D', markeredgecolor='black', markerfacecolor='white'))
-    axs[0].set_title(f'Last {last_n_steps} Steps: Id Absolute Error')
+    axs[0].set_title(f'Last {last_n_steps} Steps (Filtered): Id Absolute Error')
     axs[0].set_ylabel('Absolute Error')
     axs[0].set_xticks([1])
     axs[0].set_xticklabels(['Id Error'])
     axs[0].grid(True, linestyle='--', alpha=0.4)
 
     # Iq error boxplot
-    axs[1].boxplot(last_iq_errors, patch_artist=True, showmeans=True, showfliers=False,
+    axs[1].boxplot(filtered_iq_errors, patch_artist=True, showmeans=True, showfliers=True,
                    meanprops=dict(marker='D', markeredgecolor='black', markerfacecolor='white'))
-    axs[1].set_title(f'Last {last_n_steps} Steps: Iq Absolute Error')
+    axs[1].set_title(f'Last {last_n_steps} Steps (Filtered): Iq Absolute Error')
     axs[1].set_xticks([1])
     axs[1].set_xticklabels(['Iq Error'])
     axs[1].grid(True, linestyle='--', alpha=0.4)
 
     plt.tight_layout()
-    filename = f"{save_dir}/{csv_base}_last{last_n_steps}_error_boxplot.png"
+    filename = f"{save_dir}/{csv_base}_last{last_n_steps}_error_boxplot_filtered.png"
     plt.savefig(filename, dpi=300)
     plt.show()
-    print(f"Saved last {last_n_steps} steps boxplot to {filename}")
+    print(f"Saved last {last_n_steps} steps filtered boxplot to {filename}")
+
 
 def three_phase(csv_file, save_dir="plots", csv_base=""):
     if not os.path.exists(csv_file):
@@ -145,15 +165,16 @@ def three_phase(csv_file, save_dir="plots", csv_base=""):
     reward_function = "quadratic"
     model_name = csv_base
 
-    for ep in episodes:
-        ep_data = df[df['episode'] == ep]
-        states = ep_data[['Id', 'Iq', 'Id_ref', 'Iq_ref']].values
-        actions = ep_data[['action_d', 'action_q']].values
-        rewards = ep_data['reward'].values
-        speed = ep_data['speed'].values[0] if 'speed' in ep_data.columns else None
+    # for ep in episodes:
+    ep = 16
+    ep_data = df[df['episode'] == ep]
+    states = ep_data[['Id', 'Iq', 'Id_ref', 'Iq_ref']].values
+    actions = ep_data[['action_d', 'action_q']].values
+    rewards = ep_data['reward'].values
+    speed = ep_data['speed'].values[0] if 'speed' in ep_data.columns else None
 
-        plotter.plot_three_phase(ep, states, actions, rewards, env_name, reward_function, model_name,speed)
-        print(f" Saved three-phase plot for episode {ep}")
+    plotter.plot_three_phase(ep, states, actions, rewards, env_name, reward_function, model_name,speed)
+    print(f" Saved three-phase plot for episode {ep}")
 
 
 def plot_error_rate(csv_file, save_dir="plots", csv_base=""):
