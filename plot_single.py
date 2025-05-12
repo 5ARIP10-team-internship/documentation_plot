@@ -166,7 +166,7 @@ def three_phase(csv_file, save_dir="plots", csv_base=""):
     model_name = csv_base
 
     # for ep in episodes:
-    ep = 16
+    ep = episodes
     ep_data = df[df['episode'] == ep]
     states = ep_data[['Id', 'Iq', 'Id_ref', 'Iq_ref']].values
     actions = ep_data[['action_d', 'action_q']].values
@@ -187,7 +187,7 @@ if __name__ == "__main__":
     parser.add_argument("--csv", type=str, required=True, help="Path to the test result CSV file")
     parser.add_argument("--plot_type", type=str, choices=["error_rate", "box", "three_phase"], default="box",
                         help="Type of plot: 'episode' for per-episode curves, 'box' for error distribution")
-    parser.add_argument("--max_episodes", type=int, default=None, help="Limit number of episodes to plot")
+    parser.add_argument("--max_episodes", type=int, default=10, help="Limit number of episodes to plot")
     parser.add_argument("--output_dir", type=str, default="plots", help="Directory to save plots")
     args = parser.parse_args()
 
@@ -197,5 +197,4 @@ if __name__ == "__main__":
     if args.plot_type == "three_phase":
         three_phase(args.csv, args.output_dir, csv_base)
     elif args.plot_type == "box":
-        #plot_box(args.csv, args.output_dir, args.max_episodes, csv_base)
         plot_box_single(args.csv, args.output_dir, csv_base)
