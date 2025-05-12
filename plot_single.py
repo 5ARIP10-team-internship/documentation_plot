@@ -177,52 +177,7 @@ def three_phase(csv_file, save_dir="plots", csv_base=""):
     print(f" Saved three-phase plot for episode {ep}")
 
 
-def plot_error_rate(csv_file, save_dir="plots", csv_base=""):
-    if not os.path.exists(csv_file):
-        print(f"File not found: {csv_file}")
-        return
 
-    os.makedirs(save_dir, exist_ok=True)
-    df = pd.read_csv(csv_file)
-
-    # Compute error rate in percentage
-    epsilon = 1e-6
-    df['Id_error_rate'] = abs(df['Id'] - df['Id_ref']) / (abs(df['Id_ref']) + epsilon) * 100
-    df['Iq_error_rate'] = abs(df['Iq'] - df['Iq_ref']) / (abs(df['Iq_ref']) + epsilon) * 100
-
-    last_id_error_rates = []
-    last_iq_error_rates = []
-
-    for ep, group in df.groupby('episode'):
-        last_row = group.tail(1)
-        last_id_error_rates.append(last_row['Id_error_rate'].values[0])
-        last_iq_error_rates.append(last_row['Iq_error_rate'].values[0])
-
-    fig, axs = plt.subplots(1, 2, figsize=(12, 6))
-
-    # Id error rate boxplot
-    axs[0].boxplot(last_id_error_rates, patch_artist=True, showmeans=True, showfliers=False,
-                   meanprops=dict(marker='D', markeredgecolor='black', markerfacecolor='white'))
-    axs[0].set_title('Last Step Id Error Rate (per Episode)')
-    axs[0].set_ylabel('Error Rate (%)')
-    axs[0].set_xticks([1])
-    axs[0].set_xticklabels(['Id'])
-    axs[0].grid(True, linestyle='--', alpha=0.4)
-
-    # Iq error rate boxplot
-    axs[1].boxplot(last_iq_error_rates, patch_artist=True, showmeans=True, showfliers=False,
-                   meanprops=dict(marker='D', markeredgecolor='black', markerfacecolor='white'))
-    axs[1].set_title('Last Step Iq Error Rate (per Episode)')
-    axs[1].set_ylabel('Error Rate (%)')
-    axs[1].set_xticks([1])
-    axs[1].set_xticklabels(['Iq'])
-    axs[1].grid(True, linestyle='--', alpha=0.4)
-
-    plt.tight_layout()
-    filename = f"{save_dir}/{csv_base}_last_step_error_rate_boxplot.png"
-    plt.savefig(filename, dpi=300)
-    plt.show()
-    print(f"Saved last step error rate boxplot to {filename}")
 
 
 
@@ -244,7 +199,3 @@ if __name__ == "__main__":
     elif args.plot_type == "box":
         #plot_box(args.csv, args.output_dir, args.max_episodes, csv_base)
         plot_box_single(args.csv, args.output_dir, csv_base)
-    elif args.plot_type == "error_rate":
-        plot_error_rate(args.csv, args.output_dir, csv_base)
-    # elif args.plot_type == "test_process":
-    #     plot_episodes(args.csv, args.output_dir, args.max_episodes, csv_base)

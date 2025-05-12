@@ -77,71 +77,7 @@ def compare_models_boxplot(csv_files, model_labels, save_dir="plots", last_n_ste
     plt.show()
     print(f"Saved comparison plot to {filename}")
 
-def compare_models_error_rate_boxplot(csv_files, model_labels, save_dir="plots"): # Only calculate the last step error rate
-    os.makedirs(save_dir, exist_ok=True)
 
-    id_error_rate_groups = []
-    iq_error_rate_groups = []
-
-    epsilon = 1e-6
-
-    for csv_file, label in zip(csv_files, model_labels):
-        if not os.path.exists(csv_file):
-            print(f"File not found: {csv_file}")
-            continue
-
-        df = pd.read_csv(csv_file)
-        df['Id_error_rate'] = abs(df['Id'] - df['Id_ref']) / (abs(df['Id_ref']) + epsilon) * 100
-        df['Iq_error_rate'] = abs(df['Iq'] - df['Iq_ref']) / (abs(df['Iq_ref']) + epsilon) * 100
-
-        last_id_error_rates = []
-        last_iq_error_rates = []
-
-        for ep, group in df.groupby('episode'):
-            last_row = group.tail(1)
-            last_id_error_rates.append(last_row['Id_error_rate'].values[0])
-            last_iq_error_rates.append(last_row['Iq_error_rate'].values[0])
-
-        # Apply outlier removal
-        filtered_id_error_rates = remove_outliers(last_id_error_rates)
-        filtered_iq_error_rates = remove_outliers(last_iq_error_rates)
-
-        id_error_rate_groups.append(filtered_id_error_rates)
-        iq_error_rate_groups.append(filtered_iq_error_rates)
-
-    colors = plt.cm.Set3.colors
-
-    fig, axs = plt.subplots(1, 2, figsize=(14, 6))
-
-    # Id error rate boxplot
-    box1 = axs[0].boxplot(id_error_rate_groups, patch_artist=True, showmeans=True, showfliers=True,
-                          meanprops=dict(marker='D', markeredgecolor='black', markerfacecolor='white'))
-    axs[0].set_title('Last Step Id Error Rate Comparison (Filtered, per Episode)', fontsize=14)
-    axs[0].set_ylabel('Id Error Rate (%)', fontsize=12)
-    axs[0].set_xticks(range(1, len(model_labels) + 1))
-    axs[0].set_xticklabels(model_labels, rotation=15, fontsize=10)
-    axs[0].grid(True, linestyle='--', alpha=0.4)
-
-    for patch, color in zip(box1['boxes'], colors):
-        patch.set_facecolor(color)
-
-    # Iq error rate boxplot
-    box2 = axs[1].boxplot(iq_error_rate_groups, patch_artist=True, showmeans=True, showfliers=True,
-                          meanprops=dict(marker='D', markeredgecolor='black', markerfacecolor='white'))
-    axs[1].set_title('Last Step Iq Error Rate Comparison (Filtered, per Episode)', fontsize=14)
-    axs[1].set_ylabel('Iq Error Rate (%)', fontsize=12)
-    axs[1].set_xticks(range(1, len(model_labels) + 1))
-    axs[1].set_xticklabels(model_labels, rotation=15, fontsize=10)
-    axs[1].grid(True, linestyle='--', alpha=0.4)
-
-    for patch, color in zip(box2['boxes'], colors):
-        patch.set_facecolor(color)
-
-    plt.tight_layout()
-    filename = os.path.join(save_dir, "multi_model_error_rate_comparison_filtered.png")
-    plt.savefig(filename, dpi=300)
-    plt.show()
-    print(f"Saved last-step error rate comparison plot to {filename}")
 
 if __name__ == "__main__":
     csv_files = [
