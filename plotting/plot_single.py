@@ -29,7 +29,7 @@ def three_phase(csv_file, save_dir="plots", csv_base="", max_episodes=10):
         plot_three_phase(ep, states, actions, save_dir, csv_base)
 
 
-def box(csv_file, save_dir="plots", csv_base="", last_n_steps=100):
+def box(csv_file, save_dir="plots", csv_base="", last_n_steps=10):
     if not os.path.exists(csv_file):
         print(f"File not found: {csv_file}")
         return
