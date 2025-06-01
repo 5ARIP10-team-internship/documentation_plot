@@ -125,7 +125,43 @@ def plot_boxes(error_dict, save_dir="plots"):
         patch.set_facecolor(color)
 
     plt.tight_layout()
-    filename = os.path.join(save_dir, "comparison_boxplot.png")
+    filename = os.path.join(save_dir, "current_error_boxplot.png")
     plt.savefig(filename, dpi=300)
     plt.show()
     print(f"Saved boxplot to {filename}")
+
+
+def plot_te_box(error_dict, save_dir="plots"):
+    """
+    Plots boxplot of torque errors (Te - Te_ref) for different models.
+    """
+    os.makedirs(save_dir, exist_ok=True)
+
+    colors = plt.cm.tab10.colors
+
+    # Remove outliers and flatten if needed
+    data = [remove_outliers(errors).ravel() for errors in error_dict.values()]
+
+    plt.figure(figsize=(8, 6))
+    bp = plt.boxplot(
+        data,
+        patch_artist=True,
+        showmeans=True,
+        showfliers=True,
+        meanprops=dict(marker="D", markeredgecolor="black", markerfacecolor="white"),
+        medianprops=dict(color="black"),
+    )
+
+    # Apply colors
+    for patch, color in zip(bp["boxes"], colors):
+        patch.set_facecolor(color)
+
+    plt.ylabel("Torque Error (|Te - Te_ref|)", fontsize=12)
+    plt.xticks(range(1, len(error_dict) + 1), error_dict.keys(), rotation=15, fontsize=10)
+    plt.grid(True, linestyle="--", alpha=0.4)
+    plt.tight_layout()
+
+    filename = os.path.join(save_dir, "te_error_boxplot.png")
+    plt.savefig(filename, dpi=300)
+    plt.show()
+    print(f"Saved torque boxplot to {filename}")
