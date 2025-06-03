@@ -47,6 +47,41 @@ def plot_three_phase(idx, observations, actions, save_dir="plots", csv_base=""):
     plt.close()
 
 
+def plot_torque_tracking(idx, observations, actions, save_dir="plots", csv_base=""):
+    PLT_STATE_DIR = os.path.join(save_dir, "torque_states")
+    PLT_ACTION_DIR = os.path.join(save_dir, "torque_actions")
+
+    os.makedirs(PLT_STATE_DIR, exist_ok=True)
+    os.makedirs(PLT_ACTION_DIR, exist_ok=True)
+
+    # Plot state
+    plt.figure()
+    plt.plot(observations, label=[r"$T_e$", r"$T_{e,ref}$", "Id", "Iq"])
+    plt.legend(
+        loc="lower center",
+        bbox_to_anchor=(0.5, -0.25),
+        ncol=2,
+        fancybox=True,
+        shadow=True,
+    )
+    filename = os.path.join(PLT_STATE_DIR, f"{csv_base}_torque_state_{idx}.png")
+    plt.savefig(filename, bbox_inches="tight")
+    plt.close()
+
+    # Plot action
+    plt.figure()
+    plt.plot(actions, label=["Vd", "Vq"])
+    plt.legend(
+        loc="lower center",
+        bbox_to_anchor=(0.5, -0.25),
+        ncol=2,
+        fancybox=True,
+        shadow=True,
+    )
+    filename = os.path.join(PLT_ACTION_DIR, f"{csv_base}_torque_action_{idx}.png")
+    plt.savefig(filename, bbox_inches="tight")
+    plt.close()
+
 def remove_outliers(errors):
     # Remove outliers from the error
     q1 = np.percentile(errors, 25, axis=0)

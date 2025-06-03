@@ -3,13 +3,13 @@ import os
 
 import numpy as np
 import pandas as pd
-from utils import plot_box, plot_three_phase
+from utils import plot_box, plot_three_phase, plot_torque_tracking
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(ROOT_DIR, "data")
 
 
-def three_phase(csv_file, save_dir="plots", csv_base="", max_episodes=10):
+def three_phase(csv_file, save_dir="plots", csv_base="", max_episodes=1):
     if not os.path.exists(csv_file):
         print(f" File not found: {csv_file}")
         return
@@ -27,6 +27,25 @@ def three_phase(csv_file, save_dir="plots", csv_base="", max_episodes=10):
         actions = ep_data[["action_d", "action_q"]].values
 
         plot_three_phase(ep, states, actions, save_dir, csv_base)
+
+def torque_tracking(csv_file, save_dir="plots", csv_base="", max_episodes=1):
+    if not os.path.exists(csv_file):
+        print(f"File not found: {csv_file}")
+        return
+
+    os.makedirs(save_dir, exist_ok=True)
+    df = pd.read_csv(csv_file)
+
+    episodes = df["episode"].unique()
+
+    for i, ep in enumerate(episodes):
+        if i >= max_episodes:
+            break
+        ep_data = df[df["episode"] == ep]
+        observations = ep_data[["Te", "Te_ref", "Id", "Iq"]].values
+        actions = ep_data[["action_d", "action_q"]].values
+
+        plot_torque_tracking(i, observations, actions, save_dir, csv_base)
 
 
 def box(csv_file, save_dir="plots", csv_base="", last_n_steps=10):
@@ -54,11 +73,11 @@ if __name__ == "__main__":
     parser.add_argument(
         "--plot_type",
         type=str,
-        choices=["error_rate", "box", "three_phase"],
+        choices=["error_rate", "box", "three_phase", "torque_tracking"],
         default="box",
         help="Type of plot: 'episode' for per-episode curves, 'box' for error distribution",
     )
-    parser.add_argument("--max_episodes", type=int, default=10, help="Limit number of episodes to plot")
+    parser.add_argument("--max_episodes", type=int, default=1, help="Limit number of episodes to plot")
     parser.add_argument("--output_dir", type=str, default="plots", help="Directory to save plots")
     args = parser.parse_args()
 
@@ -70,3 +89,5 @@ if __name__ == "__main__":
         three_phase(csv_file, out_dir, csv_base)
     elif args.plot_type == "box":
         box(csv_file, out_dir, csv_base)
+    elif args.plot_type == "torque_tracking":
+        torque_tracking(csv_file, out_dir, csv_base, args.max_episodes)
