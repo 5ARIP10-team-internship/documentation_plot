@@ -56,12 +56,26 @@ if __name__ == "__main__":
     out_dir = os.path.join(ROOT_DIR, args.output_dir)
 
     csv_files = [
-        "array_11872881_experiment_1.csv",
-        "array_11872881_experiment_2.csv",
-        "array_11872881_experiment_3.csv",
-        "array_11872881_experiment_4.csv",
+        # "pmsm_absolute.csv",
+        # "pmsm_quadratic.csv",
+        # "pmsm_final_square_root.csv",
+        # "pmsm_quartic_root.csv",
+        # "tcpmsm_absolute.csv",
+        # "tcpmsm_quadratic.csv",
+        # "tcpmsm_square_root.csv",
+        "tcpmsm_final_square_root.csv",
+        # "tcpmsm_quartic_root.csv",
+        "SAC_torque_1000eps.csv",
+        # "SAC_current_1000eps.csv",
     ]
-    model_labels = ["Absolute", "Quadratic", "Quadratic root", "Quartic root"]
+    model_labels = [
+                    # "Absolute",
+                    # "Quadratic",
+                    # "Square Root",
+                    # "Quartic Root",
+                    "TDMPC-square_root",
+                    "SAC-absolute"
+                    ]
 
     csv_files = [os.path.join(DATA_DIR, f) for f in csv_files]
 

@@ -82,15 +82,13 @@ def plot_box(errors, save_dir="plots", csv_base=""):
     plt.close()
     print(f"Saved boxplot to {filename}")
 
-
 def plot_boxes(error_dict, save_dir="plots"):
     colors = plt.cm.tab10.colors
 
-    fig, axs = plt.subplots(1, 2, figsize=(14, 6))
-
-    # Id error boxplot
+    # --- Id error boxplot ---
     id_error_data = [remove_outliers(errors)[:, 0] for errors in error_dict.values()]
-    box1 = axs[0].boxplot(
+    fig_id, ax_id = plt.subplots(figsize=(7, 6))
+    box1 = ax_id.boxplot(
         id_error_data,
         patch_artist=True,
         showmeans=True,
@@ -98,14 +96,22 @@ def plot_boxes(error_dict, save_dir="plots"):
         meanprops=dict(marker="D", markeredgecolor="black", markerfacecolor="white"),
         medianprops=dict(color="black"),
     )
-    axs[0].set_ylabel("Id Error", fontsize=12)
-    axs[0].set_xticks(range(1, len(error_dict) + 1))
-    axs[0].set_xticklabels(error_dict.keys(), rotation=15, fontsize=10)
-    axs[0].grid(True, linestyle="--", alpha=0.4)
+    ax_id.set_ylabel("Id Error", fontsize=12)
+    ax_id.set_xticks(range(1, len(error_dict) + 1))
+    ax_id.set_xticklabels(error_dict.keys(), rotation=15, fontsize=10)
+    ax_id.grid(True, linestyle="--", alpha=0.4)
+    for patch, color in zip(box1["boxes"], colors):
+        patch.set_facecolor(color)
+    plt.tight_layout()
+    filename_id = os.path.join(save_dir, "id_error_boxplot.png")
+    fig_id.savefig(filename_id, dpi=300)
+    plt.show()
+    print(f"Saved Id error boxplot to {filename_id}")
 
-    # Iq error boxplot
+    # --- Iq error boxplot ---
     iq_error_data = [remove_outliers(errors)[:, 1] for errors in error_dict.values()]
-    box2 = axs[1].boxplot(
+    fig_iq, ax_iq = plt.subplots(figsize=(7, 6))
+    box2 = ax_iq.boxplot(
         iq_error_data,
         patch_artist=True,
         showmeans=True,
@@ -113,23 +119,17 @@ def plot_boxes(error_dict, save_dir="plots"):
         meanprops=dict(marker="D", markeredgecolor="black", markerfacecolor="white"),
         medianprops=dict(color="black"),
     )
-    axs[1].set_ylabel("Iq Error", fontsize=12)
-    axs[1].set_xticks(range(1, len(error_dict) + 1))
-    axs[1].set_xticklabels(error_dict.keys(), rotation=15, fontsize=10)
-    axs[1].grid(True, linestyle="--", alpha=0.4)
-
-    # Set colors for boxplots
-    for patch, color in zip(box1["boxes"], colors):
-        patch.set_facecolor(color)
+    ax_iq.set_ylabel("Iq Error", fontsize=12)
+    ax_iq.set_xticks(range(1, len(error_dict) + 1))
+    ax_iq.set_xticklabels(error_dict.keys(), rotation=15, fontsize=10)
+    ax_iq.grid(True, linestyle="--", alpha=0.4)
     for patch, color in zip(box2["boxes"], colors):
         patch.set_facecolor(color)
-
     plt.tight_layout()
-    filename = os.path.join(save_dir, "current_error_boxplot.png")
-    plt.savefig(filename, dpi=300)
+    filename_iq = os.path.join(save_dir, "iq_error_boxplot.png")
+    fig_iq.savefig(filename_iq, dpi=300)
     plt.show()
-    print(f"Saved boxplot to {filename}")
-
+    print(f"Saved Iq error boxplot to {filename_iq}")
 
 def plot_te_box(error_dict, save_dir="plots"):
     """
