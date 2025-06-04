@@ -1,15 +1,18 @@
 import argparse
 import os
-
 import numpy as np
 import pandas as pd
-from utils import plot_boxes, plot_te_box
+from utils import plot_boxes, plot_te_box,plot_reward
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(ROOT_DIR, "data")
 
 def compare_models(csv_files, model_labels, save_dir="plots", last_n_steps=10, env_name="current"):
     os.makedirs(save_dir, exist_ok=True)
+
+    if env_name == "reward":
+        plot_reward(csv_files, model_labels, save_dir)
+        return
 
     error_dict = {}
 
@@ -50,7 +53,7 @@ def compare_models(csv_files, model_labels, save_dir="plots", last_n_steps=10, e
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--output_dir", type=str, default="plots", help="Directory to save plots")
-    parser.add_argument("--env_name", type=str, choices=["current", "torque"], required=True, help="Environment type: current or torque")
+    parser.add_argument("--env_name", type=str, choices=["current", "torque","reward"], required=True, help="Environment type: current or torque")
     args = parser.parse_args()
 
     out_dir = os.path.join(ROOT_DIR, args.output_dir)
@@ -58,22 +61,27 @@ if __name__ == "__main__":
     csv_files = [
         # "pmsm_absolute.csv",
         # "pmsm_quadratic.csv",
+        # "pmsm_square_root.csv",
         # "pmsm_final_square_root.csv",
         # "pmsm_quartic_root.csv",
         # "tcpmsm_absolute.csv",
         # "tcpmsm_quadratic.csv",
         # "tcpmsm_square_root.csv",
-        "tcpmsm_final_square_root.csv",
+        # "tcpmsm_final_square_root.csv",
         # "tcpmsm_quartic_root.csv",
-        "SAC_torque_1000eps.csv",
+        # "SAC_torque_1000eps.csv",
         # "SAC_current_1000eps.csv",
+        # "wandb_sac_current.csv",
+        # "wandb_pmsm_absolute.csv",
+        "wandb_sac_torque.csv",
+        "wandb_tcpmsm_absolute.csv",
     ]
     model_labels = [
                     # "Absolute",
                     # "Quadratic",
                     # "Square Root",
                     # "Quartic Root",
-                    "TDMPC-square_root",
+                    "TDMPC-absolute",
                     "SAC-absolute"
                     ]
 
