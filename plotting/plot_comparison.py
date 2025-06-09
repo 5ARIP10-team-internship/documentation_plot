@@ -71,10 +71,11 @@ if __name__ == "__main__":
         # "tcpmsm_quartic_root.csv",
         # "SAC_torque_1000eps.csv",
         # "SAC_current_1000eps.csv",
-        # "wandb_sac_current.csv",
-        # "wandb_pmsm_absolute.csv",
-        "wandb_sac_torque.csv",
-        "wandb_tcpmsm_absolute.csv",
+        "wandb_pmsm_absolute.csv",
+        "wandb_sac_current.csv",
+        # "wandb_tcpmsm_absolute.csv",
+        # "wandb_sac_torque.csv",
+
     ]
     model_labels = [
                     # "Absolute",

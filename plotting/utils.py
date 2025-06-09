@@ -5,12 +5,12 @@ import pandas as pd
 
 plt.rcParams.update({
     "font.family": "DejaVu Sans",
-    "font.size": 14,
-    "axes.titlesize": 16,
-    "axes.labelsize": 14,
-    "xtick.labelsize": 12,
-    "ytick.labelsize": 12,
-    "legend.fontsize": 12,
+    "font.size": 26,
+    "axes.titlesize": 24,
+    "axes.labelsize": 24,
+    "xtick.labelsize": 24,
+    "ytick.labelsize": 24,
+    "legend.fontsize": 24,
 })
 
 
@@ -31,13 +31,15 @@ def remove_outliers(errors):
 def plot_three_phase(idx, observations, actions, save_dir="plots", csv_base=""):
     state_dir = os.path.join(save_dir, "states")
     action_dir = os.path.join(save_dir, "actions")
-    create_dirs(state_dir, action_dir)
+    os.makedirs(state_dir, exist_ok=True)
+    os.makedirs(action_dir, exist_ok=True)
 
-    # Plot observations
+    # Plot states
     plt.figure(figsize=(10, 7))
-    plt.plot(observations, label=["Id", "Iq", "Idref", "Iqref"])
-    plt.legend(loc="lower center", bbox_to_anchor=(0.5, -0.25), ncol=2, fancybox=True, shadow=True)
-    # plt.title("Three-phase State Tracking")
+    plt.plot(observations, linewidth=4, label=["Id", "Iq", "Id_ref", "Iq_ref"])
+    plt.xlabel("Step")
+    plt.ylabel("State Value")
+    plt.legend(loc="upper right")
     plt.grid(True, linestyle="--", alpha=0.5)
     plt.tight_layout()
     plt.savefig(os.path.join(state_dir, f"{csv_base}_state_{idx}.png"), bbox_inches="tight")
@@ -45,39 +47,48 @@ def plot_three_phase(idx, observations, actions, save_dir="plots", csv_base=""):
 
     # Plot actions
     plt.figure(figsize=(10, 7))
-    plt.plot(actions, label=["Vd", "Vq"])
-    plt.legend(loc="lower center", bbox_to_anchor=(0.5, -0.25), ncol=2, fancybox=True, shadow=True)
-    # plt.title("Three-phase Action Voltages")
+    plt.plot(actions, linewidth=4, label=["Vd", "Vq"])
+    plt.xlabel("Step")
+    plt.ylabel("Action Value")
+    plt.legend(loc="upper right")
     plt.grid(True, linestyle="--", alpha=0.5)
     plt.tight_layout()
     plt.savefig(os.path.join(action_dir, f"{csv_base}_action_{idx}.png"), bbox_inches="tight")
     plt.close()
 
 
+
+
 def plot_torque_tracking(idx, observations, actions, save_dir="plots", csv_base=""):
     state_dir = os.path.join(save_dir, "torque_states")
     action_dir = os.path.join(save_dir, "torque_actions")
-    create_dirs(state_dir, action_dir)
+    os.makedirs(state_dir, exist_ok=True)
+    os.makedirs(action_dir, exist_ok=True)
 
     # Plot torque states
     plt.figure(figsize=(10, 7))
-    plt.plot(observations, label=[r"$T_e$", r"$T_{e,ref}$", "Id", "Iq"])
-    plt.legend(loc="lower center", bbox_to_anchor=(0.5, -0.25), ncol=2, fancybox=True, shadow=True)
-    # plt.title("Torque Tracking")
+    plt.plot(observations,linewidth=4, label=["Te", "Te_ref", "Id", "Iq"])
+    plt.xlabel("Step")
+    plt.ylabel("State Value")
+    # plt.title(f"Torque Tracking States - Episode {idx}")
+    plt.legend(loc="upper right")
     plt.grid(True, linestyle="--", alpha=0.5)
     plt.tight_layout()
     plt.savefig(os.path.join(state_dir, f"{csv_base}_torque_state_{idx}.png"), bbox_inches="tight")
     plt.close()
 
-    # Plot torque actions
+    # Plot actions
     plt.figure(figsize=(10, 7))
-    plt.plot(actions, label=["Vd", "Vq"])
-    plt.legend(loc="lower center", bbox_to_anchor=(0.5, -0.25), ncol=2, fancybox=True, shadow=True)
-    plt.title("Torque Control Actions")
+    plt.plot(actions, linewidth=4,label=["Vd", "Vq"])
+    plt.xlabel("Step")
+    plt.ylabel("Action Value")
+    # plt.title(f"Torque Tracking Actions - Episode {idx}")
+    plt.legend(loc="upper right")
     plt.grid(True, linestyle="--", alpha=0.5)
     plt.tight_layout()
     plt.savefig(os.path.join(action_dir, f"{csv_base}_torque_action_{idx}.png"), bbox_inches="tight")
     plt.close()
+
 
 
 def plot_box(errors, save_dir="plots", csv_base=""):
@@ -144,7 +155,7 @@ def plot_boxes(error_dict, save_dir="plots"):
         medianprops=dict(color="black"),
     )
     ax_iq.set_ylabel("Iq Error")
-    ax_iq.set_title("Iq Tracking Error")
+    # ax_iq.set_title("Iq Tracking Error")
     ax_iq.set_xticks(range(1, len(error_dict) + 1))
     ax_iq.set_xticklabels(error_dict.keys(), rotation=15)
     ax_iq.grid(True, linestyle="--", alpha=0.4)
@@ -175,7 +186,7 @@ def plot_te_box(error_dict, save_dir="plots"):
     for patch, color in zip(bp["boxes"], colors):
         patch.set_facecolor(color)
 
-    plt.ylabel("Torque Error (|Te - Te_ref|)")
+    plt.ylabel("Torque Error")
     # plt.title("Torque Tracking Error")
     plt.xticks(range(1, len(error_dict) + 1), error_dict.keys(), rotation=15)
     plt.grid(True, linestyle="--", alpha=0.4)
